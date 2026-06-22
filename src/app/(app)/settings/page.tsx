@@ -1,6 +1,8 @@
 import Link from 'next/link'
 import { Globe, LogOut, Music2, RefreshCw, Star, User } from 'lucide-react'
 
+import { ExportButtons } from '@/components/export/export-buttons'
+import { ExtendedHistoryImport } from '@/components/extended-history-import'
 import { getCurrentUser } from '@/lib/auth/session'
 import { SyncButton } from '../dashboard/sync-button'
 
@@ -90,7 +92,33 @@ export default async function SettingsPage() {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 Pull your latest plays from Spotify. The API exposes up to 50 recent tracks at a time.
               </p>
+              {user.lastSyncedAt && (
+                <p className="text-xs text-muted-foreground">
+                  Last synced {user.lastSyncedAt.toLocaleString()}
+                  {user.lastImported != null && ` · ${user.lastImported} imported`}
+                </p>
+              )}
+              {user.lastSyncError && (
+                <p className="text-xs text-destructive" role="alert">
+                  Last sync error: {user.lastSyncError}
+                </p>
+              )}
               <SyncButton />
+            </div>
+          </section>
+
+          <ExtendedHistoryImport />
+
+          <section className="surface-editorial overflow-hidden">
+            <div className="flex items-center gap-3 border-b border-border/60 px-6 py-4">
+              <Music2 className="size-4 text-spotify" />
+              <h3 className="text-sm font-semibold tracking-tight">Export data</h3>
+            </div>
+            <div className="space-y-4 px-6 py-6">
+              <p className="text-sm leading-relaxed text-muted-foreground">
+                Download your stored listening history as CSV or capture the dashboard as a PNG image.
+              </p>
+              <ExportButtons />
             </div>
           </section>
         </div>

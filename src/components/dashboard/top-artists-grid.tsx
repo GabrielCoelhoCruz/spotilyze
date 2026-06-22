@@ -1,28 +1,26 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from '@/components/ui/card'
+import { ArtistAvatar } from '@/components/dashboard/artwork'
 
 interface Artist {
   id: string
   name: string
   plays: number
+  imageUrl?: string | null
 }
 
-const PLACEHOLDER_ARTISTS: Artist[] = [
-  { id: "1", name: "The Weeknd", plays: 156 },
-  { id: "2", name: "Dua Lipa", plays: 98 },
-  { id: "3", name: "Olivia Rodrigo", plays: 87 },
-  { id: "4", name: "Taylor Swift", plays: 76 },
-  { id: "5", name: "Bad Bunny", plays: 65 },
-  { id: "6", name: "Drake", plays: 54 },
-]
+interface TopArtistsGridProps {
+  artists: Artist[]
+  isLoading?: boolean
+}
 
-export function TopArtistsGrid({ isLoading = false }: { isLoading?: boolean }) {
+export const TopArtistsGrid = ({ artists, isLoading = false }: TopArtistsGridProps) => {
   return (
     <Card className="h-full">
       <CardHeader>
@@ -39,20 +37,30 @@ export function TopArtistsGrid({ isLoading = false }: { isLoading?: boolean }) {
                   <Skeleton className="h-3 w-2/3" />
                 </div>
               ))
-            : PLACEHOLDER_ARTISTS.map((artist) => (
-                <div
-                  key={artist.id}
-                  className="rounded-xl bg-muted p-3 text-center transition-colors hover:bg-muted/80"
-                >
-                  <div className="bg-primary/10 mx-auto mb-2 flex aspect-square items-center justify-center rounded-full text-lg font-bold">
-                    {artist.name.charAt(0)}
+            : artists.length === 0 ? (
+                <p className="col-span-full text-sm text-muted-foreground">
+                  No artists yet — sync to pull your history.
+                </p>
+              ) : (
+                artists.map((artist) => (
+                  <div
+                    key={artist.id}
+                    className="rounded-xl bg-muted p-3 text-center transition-colors hover:bg-muted/80"
+                  >
+                    <ArtistAvatar
+                      src={artist.imageUrl}
+                      alt={artist.name}
+                      fallbackLetter={artist.name.charAt(0)}
+                      size={80}
+                      className="mx-auto mb-2 aspect-square"
+                    />
+                    <p className="truncate text-sm font-medium">{artist.name}</p>
+                    <p className="text-xs text-muted-foreground tabular-nums">
+                      {artist.plays} plays
+                    </p>
                   </div>
-                  <p className="truncate text-sm font-medium">{artist.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {artist.plays} plays
-                  </p>
-                </div>
-              ))}
+                ))
+              )}
         </div>
       </CardContent>
     </Card>

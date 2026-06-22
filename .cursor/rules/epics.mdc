@@ -1,0 +1,33 @@
+# Epics
+
+## Epic: Real Dashboard & Wrapped (active)
+
+**Goal**: Replace placeholder charts with real data and ship the Wrapped snapshot view.
+
+### Phase 1 — Real Charts (done in progress)
+- [x] Extract dashboard queries module
+- [x] Wire GenrePie, HourlyHeatmap, TopTracksList, TopArtistsGrid with real data
+- [x] Enrich artist genres/images during Spotify sync
+
+### Phase 2 — Wrapped View
+- [x] `/wrapped` route with editorial snapshot cards
+- [x] Navigation link in app layout
+
+### Phase 3 — Sync Automation
+- [x] User sync metadata (`lastSyncedAt`, counts, error)
+- [x] Protected cron route for periodic sync
+
+### Phase 4 — Export & Deploy
+- [x] CSV export API + Settings UI
+- [x] PNG export (client-side capture)
+- [x] `.env.example`, `DEPLOY.md`, updated README
+
+### Phase 5 — Quality
+- [x] Unit tests for aggregations, encrypt, rate limit
+- [x] Spotify 429 backoff + API rate limits
+
+## Epic: Historical Import (future)
+
+- Upload Spotify extended streaming history JSON
+- Paginate beyond 50 recently-played items
+- Full year Wrapped with accurate rankings

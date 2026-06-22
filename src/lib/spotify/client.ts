@@ -7,6 +7,10 @@ import { decrypt, encrypt } from '@/lib/crypto/encrypt'
 import { createSpotifyOAuth } from '@/lib/spotify/oauth'
 
 const REFRESH_BUFFER_MS = 60_000
+const MAX_RETRIES = 3
+
+const sleep = (ms: number): Promise<void> =>
+  new Promise((resolve) => setTimeout(resolve, ms))
 
 export const getValidAccessToken = async (userId: string): Promise<string> => {
   const rows = await db.select().from(authTokens).where(eq(authTokens.userId, userId))
@@ -29,7 +33,9 @@ export const getValidAccessToken = async (userId: string): Promise<string> => {
   try {
     const tokens = await spotify.refreshAccessToken(refreshToken)
     const accessToken = tokens.accessToken()
-    const newRefreshToken = tokens.refreshToken()
+    const newRefreshToken = tokens.hasRefreshToken()
+      ? tokens.refreshToken()
+      : refreshToken
     const newExpiresAt = tokens.accessTokenExpiresAt()
 
     await db
@@ -58,13 +64,25 @@ export const spotifyFetch = async (
   const accessToken = await getValidAccessToken(userId)
   const url = path.startsWith('https://') ? path : `https://api.spotify.com/v1${path}`
 
-  return fetch(url, {
-    ...init,
-    headers: {
-      ...init?.headers,
-      Authorization: `Bearer ${accessToken}`,
-    },
-  })
+  for (let attempt = 0; attempt <= MAX_RETRIES; attempt += 1) {
+    const response = await fetch(url, {
+      ...init,
+      headers: {
+        ...init?.headers,
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+
+    if (response.status !== 429 || attempt === MAX_RETRIES) {
+      return response
+    }
+
+    const retryAfter = response.headers.get('Retry-After')
+    const delayMs = retryAfter ? Number(retryAfter) * 1000 : 1000 * 2 ** attempt
+    await sleep(delayMs)
+  }
+
+  throw new Error('Spotify request failed after retries')
 }
 
 interface SpotifyUserProfile {

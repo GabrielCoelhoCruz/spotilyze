@@ -1,3 +1,8 @@
+import { and, eq, isNull } from 'drizzle-orm'
+
+import { db } from '@/db'
+import { artists, dailyStats, listens, tracks, users } from '@/db/schema'
+
 import { eachDay, formatDateKey, getDateRange } from './date-ranges'
 
 export const DEMO_USER_ID = 'demo-user'
@@ -98,7 +103,7 @@ export const generateDemoData = (days = 90): DemoData => {
     genres: artist.genres,
     popularity: randomInt(40, 95),
     followers: randomInt(10000, 5000000),
-    imageUrl: null,
+    imageUrl: `https://picsum.photos/seed/${encodeURIComponent(artist.name)}/200/200`,
   }))
 
   const tracks: DemoTrack[] = Array.from({ length: 40 }, (_, index) => {
@@ -209,4 +214,66 @@ export const computeDailyStats = (listens: DemoListen[], tracks: DemoTrack[], ar
       totalMinutes: day.totalMinutes,
     }
   })
+}
+
+export const seedDemoData = (): {
+  listens: number
+  tracks: number
+  artists: number
+  days: number
+} => {
+  const { user, artists: demoArtists, tracks: demoTracks, listens: demoListens } = generateDemoData()
+
+  db.insert(users).values([user]).onConflictDoNothing().run()
+
+  if (demoArtists.length > 0) {
+    for (const artist of demoArtists) {
+      db
+        .insert(artists)
+        .values(artist)
+        .onConflictDoUpdate({
+          target: artists.id,
+          set: { imageUrl: artist.imageUrl },
+        })
+        .run()
+    }
+  }
+
+  if (demoTracks.length > 0) {
+    db.insert(tracks).values(demoTracks).onConflictDoNothing().run()
+  }
+
+  if (demoListens.length > 0) {
+    db.insert(listens).values(demoListens).onConflictDoNothing().run()
+  }
+
+  const stats = computeDailyStats(demoListens, demoTracks, demoArtists)
+  if (stats.length > 0) {
+    db.insert(dailyStats).values(stats).onConflictDoNothing().run()
+  }
+
+  return {
+    listens: demoListens.length,
+    tracks: demoTracks.length,
+    artists: demoArtists.length,
+    days: stats.length,
+  }
+}
+
+export const ensureDemoDataSeeded = async (): Promise<boolean> => {
+  const count = await db.$count(listens, eq(listens.userId, DEMO_USER_ID))
+  if (count > 0) {
+    const { artists: demoArtists } = generateDemoData()
+    for (const artist of demoArtists) {
+      db
+        .update(artists)
+        .set({ imageUrl: artist.imageUrl })
+        .where(and(eq(artists.id, artist.id), isNull(artists.imageUrl)))
+        .run()
+    }
+    return false
+  }
+
+  seedDemoData()
+  return true
 }

@@ -56,11 +56,18 @@ export const LandingHero = ({ error }: LandingHeroProps) => (
           <ArrowRight className="size-4" aria-hidden />
         </MagneticLink>
         <Link
-          href="/dashboard"
-          aria-label="View dashboard"
+          href="/demo/dashboard"
+          aria-label="Try demo without logging in"
           className={cn(buttonVariants({ variant: "outline", size: "lg" }))}
         >
-          View dashboard
+          Try demo
+        </Link>
+        <Link
+          href="/dashboard"
+          aria-label="View dashboard"
+          className={cn(buttonVariants({ variant: "ghost", size: "lg" }), "hidden sm:inline-flex")}
+        >
+          Dashboard
         </Link>
       </div>
     </MotionItem>

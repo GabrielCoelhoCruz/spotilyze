@@ -1,0 +1,27 @@
+# Workflow State
+
+## State
+
+- Phase: VALIDATE
+- Status: COMPLETED
+- Epic: Real Dashboard & Wrapped
+
+## Plan
+
+See attached plan: dashboard real data → wrapped → auto sync → export → deploy → tests.
+
+## Log
+
+- Blueprint docs created
+- Dashboard queries + real chart components wired
+- Artist enrichment in sync (genres, images)
+- Wrapped view at /wrapped
+- Cron sync route + user sync metadata
+- CSV/PNG export in Settings
+- DEPLOY.md, .env.example, README updated
+- Tests for aggregations, export, rate-limit, encrypt
+- lint/typecheck/test/build all pass
+
+## ArchiveLog
+
+(empty)

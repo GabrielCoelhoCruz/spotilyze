@@ -18,6 +18,9 @@ const PREVIEW_ARTISTS = [
   { name: "Childish Gambino", plays: 81 },
 ]
 
+const artistPhoto = (name: string) =>
+  `https://picsum.photos/seed/${encodeURIComponent(name)}/72/72`
+
 const PREVIEW_STATS = [
   { label: "Total listens", value: "2,341", sub: "all time" },
   { label: "Unique tracks", value: "847", sub: "distinct" },
@@ -102,6 +105,14 @@ export const LandingPreview = memo(function LandingPreview() {
                 >
                   <div className="flex items-center gap-3">
                     <span className="font-mono text-xs text-spotify w-4">{index + 1}</span>
+                    <div
+                      className="size-8 shrink-0 rounded-full bg-muted ring-1 ring-border/60"
+                      style={{
+                        backgroundImage: `url(${artistPhoto(artist.name)})`,
+                        backgroundSize: "cover",
+                      }}
+                      aria-hidden
+                    />
                     <span className="text-sm font-medium">{artist.name}</span>
                   </div>
                   <span className="font-mono text-xs text-muted-foreground tabular-nums">

@@ -2,8 +2,15 @@ import { NextResponse } from 'next/server'
 
 import { getCurrentUser } from '@/lib/auth/session'
 import { syncUserListeningData } from '@/lib/spotify/sync'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
-export const POST = async (): Promise<NextResponse> => {
+export const POST = async (request: Request): Promise<NextResponse> => {
+  const ip = getClientIp(request)
+  const limit = checkRateLimit(`sync:${ip}`, 5, 60_000)
+  if (!limit.allowed) {
+    return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+  }
+
   const user = await getCurrentUser()
 
   if (!user) {

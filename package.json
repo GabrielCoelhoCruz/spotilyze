@@ -1,5 +1,5 @@
 {
-  "name": "t_f086339e",
+  "name": "spotilyze",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,24 +11,34 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:studio": "drizzle-kit studio",
-    "test": "vitest run"
+    "test": "vitest run",
+    "screenshots": "tsx scripts/capture-screenshots.mts",
+    "video:studio": "remotion studio src/remotion/index.ts",
+    "video:render": "remotion render src/remotion/index.ts SpotilyzeDemo out/spotilyze-demo.mp4",
+    "video:gif": "remotion render src/remotion/index.ts SpotilyzeDemo out/spotilyze-demo.gif --image-format=png"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
+    "@remotion/cli": "^4.0.482",
+    "@remotion/media": "^4.0.482",
+    "@remotion/player": "^4.0.482",
     "arctic": "^3.7.0",
     "better-sqlite3": "^12.11.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "drizzle-orm": "^0.45.2",
     "framer-motion": "^12.40.0",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^1.21.0",
     "next": "15.5.19",
     "next-themes": "^0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "remotion": "^4.0.482",
     "shadcn": "^4.11.0",
     "tailwind-merge": "^3.6.0",
-    "tw-animate-css": "^1.4.0"
+    "tw-animate-css": "^1.4.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
@@ -40,6 +50,7 @@
     "drizzle-kit": "^0.31.10",
     "eslint": "^9",
     "eslint-config-next": "15.5.19",
+    "playwright": "1.52.0",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
     "typescript": "^5",

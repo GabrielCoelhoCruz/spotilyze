@@ -1,0 +1,37 @@
+# Architecture
+
+## Stack
+
+- **Framework**: Next.js 15 App Router (standalone output)
+- **Language**: TypeScript strict
+- **Database**: SQLite via better-sqlite3 + Drizzle ORM
+- **Auth**: Spotify OAuth (Arctic) with encrypted token storage
+- **UI**: Tailwind CSS 4, shadcn/ui, Framer Motion
+- **Testing**: Vitest
+
+## Data Flow
+
+1. User authenticates via Spotify OAuth (`/api/auth/login` → `/api/auth/callback`)
+2. Sync pulls recently-played tracks and enriches artist metadata (`src/lib/spotify/sync.ts`)
+3. Listens, tracks, and artists stored in SQLite (`data/spotify.db`)
+4. Dashboard and Wrapped pages query aggregated stats server-side
+5. Cron route (`/api/cron/sync`) keeps data fresh for connected users
+
+## Key Patterns
+
+- Server components for data-heavy pages; client components only for interactivity
+- Queries live in `src/lib/dashboard/queries.ts` and `src/lib/wrapped/queries.ts`
+- Pure aggregation helpers in `src/lib/dashboard/aggregations.ts` (unit-testable)
+- Rate limiting via in-memory store (`src/lib/rate-limit.ts`) for self-host
+- Spotify API calls go through `spotifyFetch` with 429 backoff
+
+## Directory Layout
+
+```
+src/
+├── app/(app)/          # Authenticated pages (dashboard, wrapped, settings)
+├── app/api/            # API routes (auth, sync, cron, export)
+├── components/         # UI components by feature
+├── db/schema/          # Drizzle table definitions
+└── lib/                # Business logic (spotify, auth, dashboard, export)
+```

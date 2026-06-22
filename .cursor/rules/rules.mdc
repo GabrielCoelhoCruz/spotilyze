@@ -1,0 +1,27 @@
+# Project Rules
+
+## Code Style
+
+- TypeScript strict; no `any`
+- Functional components; `const` arrow functions
+- Tailwind for all styling; no custom CSS unless in `globals.css`
+- Early returns for readability
+- Event handlers prefixed with `handle`
+- No semicolons
+
+## Commits
+
+- Format: `type(scope): description` (imperative mood, no period)
+- Types: `feat`, `fix`, `chore`, `docs`, `refactor`, `test`, `perf`
+
+## Security
+
+- Never log secrets or tokens
+- Encrypt refresh/access tokens at rest
+- Validate cron secret on background sync routes
+- Rate-limit auth and sync endpoints
+
+## Testing
+
+- Run `pnpm lint`, `pnpm typecheck`, `pnpm test` before marking work complete
+- Pure logic in testable modules under `src/lib/**/aggregations.ts`

@@ -32,10 +32,31 @@ export default async function AppLayout({
           </Link>
 
           <div className="flex items-center gap-1.5">
-            {user && (
-              <span className="hidden max-w-[140px] truncate text-xs text-muted-foreground sm:inline mr-1">
-                {user.displayName ?? "Logged in"}
-              </span>
+            {user ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  className="inline-flex h-9 items-center justify-center rounded-xl px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  href="/wrapped"
+                  className="inline-flex h-9 items-center justify-center rounded-xl px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  Wrapped
+                </Link>
+                <span className="mr-1 hidden max-w-[140px] truncate text-xs text-muted-foreground sm:inline">
+                  {user.displayName ?? "Logged in"}
+                </span>
+              </>
+            ) : (
+              <Link
+                href="/demo/dashboard"
+                className="inline-flex h-9 items-center justify-center rounded-xl px-3.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                Demo
+              </Link>
             )}
             <Link
               href="/settings"

@@ -9,6 +9,7 @@ export const tracks = sqliteTable('tracks', {
   popularity: integer('popularity'),
   explicit: integer('explicit', { mode: 'boolean' }),
   previewUrl: text('preview_url'),
+  imageUrl: text('image_url'),
   externalUrls: text('external_urls', { mode: 'json' }).$type<Record<string, string>>(),
 })
 

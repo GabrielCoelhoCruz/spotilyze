@@ -7,6 +7,10 @@ export const users = sqliteTable('users', {
   country: text('country'),
   product: text('product'),
   createdAt: integer('created_at', { mode: 'timestamp' }).notNull().$defaultFn(() => new Date()),
+  lastSyncedAt: integer('last_synced_at', { mode: 'timestamp' }),
+  lastImported: integer('last_imported'),
+  lastSkipped: integer('last_skipped'),
+  lastSyncError: text('last_sync_error'),
 })
 
 export type User = typeof users.$inferSelect
