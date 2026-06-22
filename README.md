@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spotify Stats
 
-## Getting Started
+![Hero GIF placeholder](./public/hero.gif)
 
-First, run the development server:
+> Your personal Spotify listening history, visualized. Self-host in one command.
+
+## Why
+
+Spotify gives artists rich analytics, but listeners get almost no insight into their own habits. This app fills that gap by importing your personal streaming history and turning it into a clean, fast dashboard you control.
+
+- **Privacy first**: your data lives on your machine, not a third-party server.
+- **No subscriptions**: run it locally or on a cheap VPS forever.
+- **Hackable**: built with Next.js, TypeScript, Tailwind CSS, and Drizzle ORM on SQLite.
+
+## Quick start
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+# 1. Install dependencies
+pnpm install
+
+# 2. Run the development server
 pnpm dev
-# or
-bun dev
+
+# 3. Open http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Self-host with Docker
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+docker compose up --build
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Then open http://localhost:3000. The `data/` directory is mounted as a volume so your database persists across restarts.
 
-## Learn More
+## Features
 
-To learn more about Next.js, take a look at the following resources:
+- SQLite-backed storage via Drizzle ORM
+- User and token management
+- Track, artist, and listen ingestion
+- Daily aggregated statistics
+- Responsive Tailwind CSS UI
+- Dockerized, one-command deployment
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feat/my-feature`
+3. Make your changes and add tests if applicable
+4. Run `pnpm lint` and `pnpm typecheck`
+5. Open a pull request
 
-## Deploy on Vercel
+## Roadmap
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Spotify OAuth login
+- [ ] Upload and parse streaming history JSON
+- [ ] Dashboard charts and filters
+- [ ] Export and backup utilities
+- [ ] Dark mode
