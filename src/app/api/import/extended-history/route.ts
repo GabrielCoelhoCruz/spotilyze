@@ -23,8 +23,6 @@ const processImportBatch = async (
     }
 
     const trackName = song.master_metadata_track_name ?? 'Unknown Track'
-    const artistName = song.master_metadata_album_artist_name ?? 'Unknown Artist'
-    const albumName = song.master_metadata_album_album_name ?? null
 
     await db
       .insert(tracks)
